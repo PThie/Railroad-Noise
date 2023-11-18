@@ -241,7 +241,14 @@ hk.sf$law_established <- ifelse(test = hk.sf$year_mon >= "2020-12",
                               yes = 1,
                               no = 0)
 
+# -------------------------------------------------------------------------
+# distance to main tracks
 
+# determine the nearest feature
+nearest <- st_nearest_feature(hk.sf, main_tracks)
+
+# calculate distance to main tracks
+hk.sf$distance_main_tracks <- st_distance(hk.sf, main_tracks[nearest, ], by_element = TRUE)
 
 ############################################################
 # export                                                   #
