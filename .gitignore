@@ -1,0 +1,6 @@
+data
+backup
+output
+.Rhistory
+*.py
+archive
