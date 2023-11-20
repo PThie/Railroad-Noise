@@ -34,19 +34,16 @@ setwd(workdir)
 # Stage 01: Preparation Files                              #
 ############################################################
 
-
 # laermstatistik ----------------------------------------------------------
 # mainly serves as motivation of the topic
 # displays the number of people affected by the railroad system
 # displays a map with noise indicator (LKZ)
 source(file.path(codePath, "01_01_laermstatistik.r"), encoding = "UTF-8")
 
-
 # transported goods -------------------------------------------------------
 # mainly serves as motivation of the topic
 # displays the transporation capacity of railraods in Germany
 source(file.path(codePath, "01_02_transported_goods.r"), encoding = "UTF-8")
-
 
 # noise environment -------------------------------------------------------
 # mainly for panel analysis
@@ -59,25 +56,25 @@ source(file.path(codePath, "01_03_noise_environment.r"), encoding = "UTF-8")
 # needed for the housing tpye preparation files
 source(file.path(codePath, "01_04_preparation_track_environment.r"), encoding = "UTF-8")
 
-
 # HK preparation ----------------------------------------------------------
 # prepares the house purchases data
 # outputs: hk_basic_prep; hk_complete_prep 
 source(file.path(codePath, "01_05_preparation_hk.r"), encoding = "UTF-8")
-
 
 # buffering ---------------------------------------------------------------
 # buffers around the main tracks for each housing type
 # outputs: hk_buffered; wm_buffered; wk_buffered
 source(file.path(codePath, "01_06_main_tracks_buffer.r"), encoding = "UTF-8")
 
+# alternative tracks ------------------------------------------------------
+# using alternative tracks (main tracks as given by strategic noise mapping)
+source(file.path(codePath, "01_07_alternative_tracks_buffer.R"), encoding = "UTF-8")
 
 ############################################################
 # Stage 02: Descriptives                                   #
 ############################################################
 
 source(file.path(codePath, "02_descriptives.r"), encoding = "UTF-8")
-
 
 ############################################################
 # Stage 03: Estimation                                     #
