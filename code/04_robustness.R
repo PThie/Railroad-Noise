@@ -4,20 +4,20 @@
 
 # performs different robustness test by rerunning regression under different settings
 # Robustness tests:
-  # 1) Change of control group (to 3000 meters)
-  # 2) Change of regional FE (to grid level)
-  # 3) Pre-trends
-  # 4) Change of dependent variable to laufzeittage
-  # 5) State time trend
-  # 6) One treatment period (total effect)
-  # 7) control period and middle (placebo)
-  # 8) Exclusion of big cities 500k population
-  # 9) Exclusion of big cities 100k population
-  # 10) Drop mixed months
-  # 11) Drop Neutral Zone
-  # 12) LOOE States
-  # 13) Alternative Railroads
-  # 14) LOOE Corridors
+    # 1) Change of control group (to 3000 meters)
+    # 2) Change of regional FE (to grid level)
+    # 3) Pre-trends
+    # 4) Change of dependent variable to laufzeittage
+    # 5) State time trend
+    # 6) One treatment period (total effect)
+    # 7) control period and middle (placebo)
+    # 8) Exclusion of big cities 500k population
+    # 9) Exclusion of big cities 100k population
+    # 10) Drop mixed months
+    # 11) Drop Neutral Zone
+    # 12) LOOE States
+    # 13) Alternative Railroads
+    # 14) LOOE Corridors
 
 ############################################################
 # Load Data                                                #
