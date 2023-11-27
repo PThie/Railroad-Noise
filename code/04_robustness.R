@@ -47,43 +47,41 @@ bula <- st_transform(bula, crs = 32632)
 
 ##### preparation function
 prep_data <- function(data_prepared){
-  # drop geometry
-  data_prepared <- st_drop_geometry(data_prepared)
+    # drop geometry
+    data_prepared <- st_drop_geometry(data_prepared)
 
-  # restrict the data set 
-  # to municipalities that are crossed by tracks
-  data_prepared <- data_prepared[data_prepared$affected_munic == 1, ]
-  
-  # as factor
-  data_prepared$blid <- as.factor(data_prepared$blid)
-  
-  # months
-  data_prepared$months <- as.factor(data_prepared$year_mon)
-  
-  # return
-  return(data_prepared)
+    # restrict the data set 
+    # to municipalities that are crossed by tracks
+    data_prepared <- data_prepared[data_prepared$affected_munic == 1, ]
+    
+    # as factor
+    data_prepared$blid <- as.factor(data_prepared$blid)
+    
+    # months
+    data_prepared$months <- as.factor(data_prepared$year_mon)
+    
+    # return
+    return(data_prepared)
 }
-
 
 ##### apply function
 hk_affected <- prep_data(hk)
 
-
 # table labels ------------------------------------------------------------
-tablabel_objchar <- c("alter" = "Age", "alter_squ" = "Age$^2$", "wohnflaeche" = "Living space", "wohnflaeche_squ" = "Living space$^2$", "grundstuecksflaeche" = "Plot area",
-                      "grundstuecksflaeche_squ" = "Plot area$^2$", "anzahletagen" = "Number floors", "anzahletagenUNBEKANNT" = "Number floors (unknown)", "keller" = "Basement",
-                      "as.factor(objektzustand)2" = "Condition: First occupancy after reconstruction", "as.factor(objektzustand)3" = "Condition: Like new", "as.factor(objektzustand)4" = "Condition: Reconstructed",
-                      "as.factor(objektzustand)5" = "Condition: Modernised", "as.factor(objektzustand)6" = "Condition: Completely renovated", "as.factor(objektzustand)7" = "Condition: Well kempt",
-                      "as.factor(objektzustand)8" = "Condition: Needs renovation", "as.factor(objektzustand)9" = "Condition: By arrangement", "as.factor(objektzustand)10" = "Condition: Dilapidated", "objektzustandUNBEKANNT" = "Condition (unknown)",
-                      "as.factor(heizungsart)2" = "Heating: Electric heating", "as.factor(heizungsart)3" = "Heating: Self-contained central heating", "as.factor(heizungsart)4" = "Heating: District heating", 
-                      "as.factor(heizungsart)5" = "Heating: Floor heating", "as.factor(heizungsart)6" = "Heating: Gas heating", "as.factor(heizungsart)7" = "Heating: Wood pellet heating", 
-                      "as.factor(heizungsart)8" = "Heating: Night storage heating", "as.factor(heizungsart)9" = "Heating: Heating by stove", "as.factor(heizungsart)10" = "Heating: Oil heating",
-                      "as.factor(heizungsart)11" = "Heating: Solar heating", "as.factor(heizungsart)12" = "Heating: Thermal heat pump", "as.factor(heizungsart)13" = "Heating: Central heating",
-                      "heizungsartUNBEKANNT" = "Heating (unknown)", "as.factor(ausstattung)2" = "Endowment: Normal", "as.factor(ausstattung)3" = "Endowment: Sophisticated", "as.factor(ausstattung)4" = "Endowment: Deluxe",
-                      "ausstattungUNBEKANNT" = "Endowment (unknown)", "badezimmer" = "Number bathrooms", "badezimmerUNBEKANNT" = "Number bathrooms (unknown)",
-                      "etage" = "Floor", "balkon" = "Balcony", "einbaukueche" = "Built-in kitchen", "garten" = "Garden")
-
-
+tablabel_objchar <- c(
+    "alter" = "Age", "alter_squ" = "Age$^2$", "wohnflaeche" = "Living space", "wohnflaeche_squ" = "Living space$^2$", "grundstuecksflaeche" = "Plot area",
+    "grundstuecksflaeche_squ" = "Plot area$^2$", "anzahletagen" = "Number floors", "anzahletagenUNBEKANNT" = "Number floors (unknown)", "keller" = "Basement",
+    "as.factor(objektzustand)2" = "Condition: First occupancy after reconstruction", "as.factor(objektzustand)3" = "Condition: Like new", "as.factor(objektzustand)4" = "Condition: Reconstructed",
+    "as.factor(objektzustand)5" = "Condition: Modernised", "as.factor(objektzustand)6" = "Condition: Completely renovated", "as.factor(objektzustand)7" = "Condition: Well kempt",
+    "as.factor(objektzustand)8" = "Condition: Needs renovation", "as.factor(objektzustand)9" = "Condition: By arrangement", "as.factor(objektzustand)10" = "Condition: Dilapidated", "objektzustandUNBEKANNT" = "Condition (unknown)",
+    "as.factor(heizungsart)2" = "Heating: Electric heating", "as.factor(heizungsart)3" = "Heating: Self-contained central heating", "as.factor(heizungsart)4" = "Heating: District heating", 
+    "as.factor(heizungsart)5" = "Heating: Floor heating", "as.factor(heizungsart)6" = "Heating: Gas heating", "as.factor(heizungsart)7" = "Heating: Wood pellet heating", 
+    "as.factor(heizungsart)8" = "Heating: Night storage heating", "as.factor(heizungsart)9" = "Heating: Heating by stove", "as.factor(heizungsart)10" = "Heating: Oil heating",
+    "as.factor(heizungsart)11" = "Heating: Solar heating", "as.factor(heizungsart)12" = "Heating: Thermal heat pump", "as.factor(heizungsart)13" = "Heating: Central heating",
+    "heizungsartUNBEKANNT" = "Heating (unknown)", "as.factor(ausstattung)2" = "Endowment: Normal", "as.factor(ausstattung)3" = "Endowment: Sophisticated", "as.factor(ausstattung)4" = "Endowment: Deluxe",
+    "ausstattungUNBEKANNT" = "Endowment (unknown)", "badezimmer" = "Number bathrooms", "badezimmerUNBEKANNT" = "Number bathrooms (unknown)",
+    "etage" = "Floor", "balkon" = "Balcony", "einbaukueche" = "Built-in kitchen", "garten" = "Garden"
+)
 
 ##################################### ROBUSTNESS TEST 1 ############################################################################
 
@@ -94,37 +92,36 @@ tablabel_objchar <- c("alter" = "Age", "alter_squ" = "Age$^2$", "wohnflaeche" = 
 ##### description
 # set the control group to 3000 meter and see whether this impacts the results
 
-
 ##### preparation function
 prep_data_diff_cg <- function(data_prepared){
-  # drop geometry
-  data_prepared <- st_drop_geometry(data_prepared)
+    # drop geometry
+    data_prepared <- st_drop_geometry(data_prepared)
 
-  # restrict the data set 
-  # to municipalities that are crossed by tracks
-  data_prepared <- data_prepared[data_prepared$bf50_only == 1 |
-                                   data_prepared$bf100 == 1 |
-                                   data_prepared$bf250 == 1 |
-                                   data_prepared$bf500 == 1 |
-                                   data_prepared$bf750 == 1 |
-                                   data_prepared$bf1000 == 1 |
-                                   data_prepared$bf2000 == 1 |
-                                   data_prepared$bf3000 == 1, ]
-  
-  # as factor: states
-  data_prepared$blid <- as.factor(data_prepared$blid)
-  
-  # as factor: months
-  data_prepared$months <- as.factor(data_prepared$year_mon)
-  
-  # return
-  return(data_prepared)
+    # restrict the data set 
+    # to municipalities that are crossed by tracks
+    data_prepared <- data_prepared[
+        data_prepared$bf50_only == 1 |
+        data_prepared$bf100 == 1 |
+        data_prepared$bf250 == 1 |
+        data_prepared$bf500 == 1 |
+        data_prepared$bf750 == 1 |
+        data_prepared$bf1000 == 1 |
+        data_prepared$bf2000 == 1 |
+        data_prepared$bf3000 == 1,
+    ]
+    
+    # as factor: states
+    data_prepared$blid <- as.factor(data_prepared$blid)
+    
+    # as factor: months
+    data_prepared$months <- as.factor(data_prepared$year_mon)
+    
+    # return
+    return(data_prepared)
 }
-
 
 ##### apply function
 hk_affected3000 <- prep_data_diff_cg(hk)
-
 
 # descriptives ------------------------------------------------------------
 # to show that treated and control more similar than in the unrestricted case (beyond 3km)
@@ -136,24 +133,28 @@ hk_affected3000_des <- hk_affected3000[rowSums(is.na(hk_affected3000)) != ncol(h
 
 # summary function
 sum_fun <- function(dataframe, dataframe_name){
-  des <- dataframe %>% group_by(bf500_only) %>% summarise(mean_price = mean(kaufpreis, na.rm = TRUE),
-                                                          mean_age = mean(alter, na.rm = TRUE),
-                                                          mean_space = mean(wohnflaeche, na.rm = TRUE),
-                                                          mean_plot = mean(grundstuecksflaeche, na.rm = TRUE),
-                                                          mean_endowment = mean(ausstattung, na.rm = TRUE),
-                                                          mean_rooms = mean(zimmeranzahl, na.rm = TRUE),
-                                                          mean_station = mean(distance_station, na.rm = TRUE),
-                                                          mean_largcenter = mean(distance_largcenter, na.rm = TRUE),
-                                                          mean_streets = mean(distance_streets, na.rm = TRUE))
-  
-  # add group difference (control - treated)
-  des <- data.frame(rbind(des, des[1,] - des[2,]))
-  
-  # rename groups
-  des$bf500_only <- c(paste0("control_", dataframe_name), paste0("treated_", dataframe_name), paste0("difference_", dataframe_name))
-  
-  # return
-  return(des)
+    des <- dataframe %>%
+        group_by(bf500_only) %>%
+        summarise(
+            mean_price = mean(kaufpreis, na.rm = TRUE),
+            mean_age = mean(alter, na.rm = TRUE),
+            mean_space = mean(wohnflaeche, na.rm = TRUE),
+            mean_plot = mean(grundstuecksflaeche, na.rm = TRUE),
+            mean_endowment = mean(ausstattung, na.rm = TRUE),
+            mean_rooms = mean(zimmeranzahl, na.rm = TRUE),
+            mean_station = mean(distance_station, na.rm = TRUE),
+            mean_largcenter = mean(distance_largcenter, na.rm = TRUE),
+            mean_streets = mean(distance_streets, na.rm = TRUE)
+        )
+    
+    # add group difference (control - treated)
+    des <- data.frame(rbind(des, des[1,] - des[2,]))
+    
+    # rename groups
+    des$bf500_only <- c(paste0("control_", dataframe_name), paste0("treated_", dataframe_name), paste0("difference_", dataframe_name))
+    
+    # return
+    return(des)
 }
 
 # main descriptives
@@ -180,42 +181,47 @@ write.xlsx(des, file.path(outputPath, "descriptives/summary_difference_3km_restr
 dep_hk <- "ln_houseprice"
 
 ##### object characteristics
-char_indep_hk <- c("in_bau", "alter", "alter_squ","wohnflaeche", "wohnflaeche_squ",
-                   "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
-                   "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT",
-                   "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
-                   "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter", 
-                   "distance_airport", "distance_industry", "distance_streets")
-
+char_indep_hk <- c(
+    "in_bau", "alter", "alter_squ","wohnflaeche", "wohnflaeche_squ",
+    "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
+    "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT",
+    "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
+    "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter", 
+    "distance_airport", "distance_industry", "distance_streets"
+)
 
 ##### interactions (both event times included)
 int_indep <- c("bf500_only * law_inprogress", "bf500_only * law_established")
 
-
 ##### combine all independent variables
 indep_hk <- c(char_indep_hk, int_indep)
 
-
 ##### define estimation formula
-form_hk <- as.formula(paste(dep_hk,
-                            paste(indep_hk, collapse = " + "),
-                            sep = "~"))
-
-
+form_hk <- as.formula(
+    paste(
+        dep_hk,
+        paste(indep_hk, collapse = " + "),
+        sep = "~"
+    )
+)
 
 # estimation --------------------------------------------------------------
 
 ##### HK
 # estimation
-basemodel_hk_3000k <- feols(form_hk, se = "hetero" , data = hk_affected3000, fixef = c("months", "r1_id"))
+basemodel_hk_3000k <- feols(form_hk, se = "hetero", data = hk_affected3000, fixef = c("months", "r1_id"))
 
 # show results
 etable(basemodel_hk_3000k, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
 
 # export
-esttex(basemodel_hk_3000k, file = file.path(outputPath, "regression/robust_basemodel_hk_3k.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk 3km control")
-
+esttex(
+    basemodel_hk_3000k,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_3k.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar,
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robustness basemodel hk 3km control"
+)
 
 ##################################### ROBUSTNESS TEST 2 ############################################################################
 
@@ -233,12 +239,21 @@ esttex(basemodel_hk_3000k, file = file.path(outputPath, "regression/robust_basem
 basemodel_hk_regFE <- feols(form_hk, se = "hetero" , data = hk_affected, fixef = c("months", "plz"))
 
 # show results
-etable(basemodel_hk_regFE, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
+etable(
+    basemodel_hk_regFE,
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    digits = "r3",
+    se = "hetero"
+)
 
 # export
-esttex(basemodel_hk_regFE, file = file.path(outputPath, "regression/robust_basemodel_hk_regFE.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk with regional FE on zip-code")
-
+esttex(
+    basemodel_hk_regFE,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_regFE.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar,
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robustness basemodel hk with regional FE on zip-code"
+)
 
 ##################################### ROBUSTNESS TEST 3 ############################################################################
 
@@ -250,25 +265,25 @@ esttex(basemodel_hk_regFE, file = file.path(outputPath, "regression/robust_basem
 # to generate a list of months per period
 
 month_generator <- function(year){
-  
-  # define list of possible months
-  x <- c(1:12)
-  
-  # initialise vector
-  list_of_months <- c()
-  
-  # loop over possible months
-  for (val in x){
-    if (val <= 9){
-      list_of_months[val] <- paste0(year, "-0", val)
+    
+    # define list of possible months
+    x <- c(1:12)
+    
+    # initialise vector
+    list_of_months <- c()
+    
+    # loop over possible months
+    for (val in x){
+        if (val <= 9){
+            list_of_months[val] <- paste0(year, "-0", val)
+        }
+        else{
+            list_of_months[val] <- paste0(year, "-", val)
+        }
     }
-    else{
-      list_of_months[val] <- paste0(year, "-", val)
-    }
-  }
-  
-  # return 
-  list_of_months
+    
+    # return 
+    list_of_months
 }
 
 
@@ -322,42 +337,63 @@ hk_affected$periods[hk_affected$year_mon %in% lom_2021_new] <- "t+2"
 # make "periods" as factor
 hk_affected$periods <- as.factor(hk_affected$periods)
 
-
-
 # estimation --------------------------------------------------------------
 
 # model
-basemodel_hk_pretrend <- feols(ln_houseprice ~ in_bau + alter + alter_squ + 
-               wohnflaeche + wohnflaeche_squ + grundstuecksflaeche + grundstuecksflaeche_squ + 
-               anzahletagen + anzahletagenUNBEKANNT + badezimmer + badezimmerUNBEKANNT + 
-               as.factor(heizungsart) + heizungsartUNBEKANNT + as.factor(ausstattung) + 
-               ausstattungUNBEKANNT + zimmeranzahl + as.factor(objektzustand) + 
-               objektzustandUNBEKANNT + distance_station + distance_junction + 
-               distance_largcenter + distance_medcenter + distance_smalcenter +
-               distance_airport + distance_industry + distance_streets +
-               bf500_only +
-               i(periods, bf500_only, ref = "t"), se = "hetero" , data = hk_affected, fixef = c("months", "r1_id"))
-
+basemodel_hk_pretrend <- feols(
+    ln_houseprice ~ in_bau + alter + alter_squ + 
+    wohnflaeche + wohnflaeche_squ + grundstuecksflaeche + grundstuecksflaeche_squ + 
+    anzahletagen + anzahletagenUNBEKANNT + badezimmer + badezimmerUNBEKANNT + 
+    as.factor(heizungsart) + heizungsartUNBEKANNT + as.factor(ausstattung) + 
+    ausstattungUNBEKANNT + zimmeranzahl + as.factor(objektzustand) + 
+    objektzustandUNBEKANNT + distance_station + distance_junction + 
+    distance_largcenter + distance_medcenter + distance_smalcenter +
+    distance_airport + distance_industry + distance_streets +
+    bf500_only +
+    i(periods, bf500_only, ref = "t"),
+    se = "hetero",
+    data = hk_affected,
+    fixef = c("months", "r1_id")
+)
 
 # show results
-etable(basemodel_hk_pretrend, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
+etable(
+    basemodel_hk_pretrend,
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    digits = "r3",
+    se = "hetero"
+)
 
 # export
-esttex(basemodel_hk_pretrend, file = file.path(outputPath, "regression/robust_basemodel_hk_pretrend.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk pre-trends")
+esttex(
+    basemodel_hk_pretrend,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_pretrend.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar,
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    se = "hetero",
+    title = "robustness basemodel hk pre-trends"
+)
 
 # confidence interval -----------------------------------------------------
 
-coefplot(basemodel_hk_pretrend, se = "hetero", drop = c("wohnflaeche", "grundstuecksflaeche", "anzahletagen", "badezimmer",
-                                                        "in_bau", "alter", "ausstattung", "heizungsart", "objektzustand", "zimmeranzahl", "distance", "^bf500_only$"),
-         ci_level = 0.9, dict = c("i(var = bf500_only, f = periods, ref = \"t\")t-1" = "t-1",
-                                  "i(var = bf500_only, f = periods, ref = \"t\")t-2" = "t-2",
-                                  "i(var = bf500_only, f = periods, ref = \"t\")t-3" = "t-3",
-                                  "i(var = bf500_only, f = periods, ref = \"t\")t-4" = "t-4",
-                                  "i(var = bf500_only, f = periods, ref = \"t\")t+1" = "t+1",
-                                  "i(var = bf500_only, f = periods, ref = \"t\")t+2" = "t+2"),
-         order = c("t-4", "t-3", "t-2", "t-1", "t+1", "t+2"),
-         lwd = 1.5, pt.lwd = 2, grid = FALSE, main = "", lab.cex = 1.2, pt.cex = 1.5)
+coefplot(
+    basemodel_hk_pretrend,
+    se = "hetero",
+    drop = c(
+        "wohnflaeche", "grundstuecksflaeche", "anzahletagen", "badezimmer",
+        "in_bau", "alter", "ausstattung", "heizungsart", "objektzustand", "zimmeranzahl", "distance", "^bf500_only$"),
+    ci_level = 0.9,
+    dict = c(
+        "i(var = bf500_only, f = periods, ref = \"t\")t-1" = "t-1",
+        "i(var = bf500_only, f = periods, ref = \"t\")t-2" = "t-2",
+        "i(var = bf500_only, f = periods, ref = \"t\")t-3" = "t-3",
+        "i(var = bf500_only, f = periods, ref = \"t\")t-4" = "t-4",
+        "i(var = bf500_only, f = periods, ref = \"t\")t+1" = "t+1",
+        "i(var = bf500_only, f = periods, ref = \"t\")t+2" = "t+2"
+    ),
+    order = c("t-4", "t-3", "t-2", "t-1", "t+1", "t+2"),
+    lwd = 1.5, pt.lwd = 2, grid = FALSE, main = "", lab.cex = 1.2, pt.cex = 1.5
+)
 
 # export
 # via "Export" function in plot window (size 488x618)
@@ -374,12 +410,17 @@ coef_interest <- coef[49:54, ]
 # change row names
 rownames(coef_interest) <- seq(1:nrow(coef_interest))
 
-coef_interest$period <- c("-1", "-2", "-3", "-4", 
-                          "1", "2")
+coef_interest$period <- c(
+    "-1", "-2", "-3", "-4", 
+    "1", "2"
+)
 
 # confidence interval min and max (90% interval)
-coef_interest <- coef_interest %>% mutate(conf_min = coef - (1.645 * se),
-                                          conf_max = coef + (1.645 * se))
+coef_interest <- coef_interest %>%
+    mutate(
+        conf_min = coef - (1.645 * se),
+        conf_max = coef + (1.645 * se)
+    )
 
 # reorder
 coef_interest <- coef_interest[c(rev(1:4), 5:6),]
@@ -390,26 +431,43 @@ reference <- as.data.frame(cbind(coef = c(coef_interest$coef, 0), order_periods 
 reference <- reference[order(reference$order_periods), ]
 
 # plot
-pretrends_plot <- ggplot(data = coef_interest, 
-       mapping = aes(x = order_periods, y = coef))+
-  geom_point(size = 2.4)+
-  geom_pointrange(mapping = aes(x = order_periods, ymin = conf_min, ymax = conf_max),
-                position = position_dodge(width = 0.4), size = 0.6)+
-  geom_hline(yintercept = 0)+
-  geom_vline(xintercept = 5)+
-  geom_point(mapping = aes(x = 5, y = 0), size = 2.4)+
-  labs(x = "", y = "Coefficients and 90% CI")+
-  theme(panel.background = element_blank(),
+pretrends_plot <- ggplot(
+    data = coef_interest, 
+    mapping = aes(x = order_periods, y = coef)
+)+
+    geom_point(size = 2.4)+
+    geom_pointrange(
+        mapping = aes(
+            x = order_periods,
+            ymin = conf_min,
+            ymax = conf_max
+        ),
+        position = position_dodge(width = 0.4),
+        size = 0.6
+    )+
+    geom_hline(yintercept = 0)+
+    geom_vline(xintercept = 5)+
+    geom_point(mapping = aes(x = 5, y = 0), size = 2.4)+
+    labs(x = "", y = "Coefficients and 90% CI")+
+    theme(
+        panel.background = element_blank(),
         panel.border = element_rect(size = 1, fill = NA),
         axis.text = element_text(size = 15),
         axis.title = element_text(size = 17),
-        legend.key = element_blank())
+        legend.key = element_blank()
+    )
 
 pretrends_plot <- pretrends_plot+
-  geom_line(data = reference, mapping = aes(y = coef, x = order_periods, group = 1), linetype = "dashed", size = 1)+
-  scale_x_continuous(breaks = c(1:7),
-                     labels = c("t-4", "t-3", "t-2", "t-1", "t", "t+1", "t+2"))
-  
+    geom_line(
+        data = reference,
+        mapping = aes(y = coef, x = order_periods, group = 1),
+        linetype = "dashed", size = 1
+    )+
+    scale_x_continuous(
+        breaks = c(1:7),
+        labels = c("t-4", "t-3", "t-2", "t-1", "t", "t+1", "t+2")
+    )
+
 pretrends_plot
 ggsave(plot = pretrends_plot, file.path(outputPath, "graphs/pretrends_plot.png"), height = 7, width = 8)
 
