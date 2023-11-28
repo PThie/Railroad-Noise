@@ -185,7 +185,7 @@ extended_plot <- ggplot(
 		name = ""
 	)+
 	geom_hline(yintercept = 0)+
-	labs(x = "Distance to tracks (m)", y = "Estimate and 90% CI")+
+	labs(x = "Distance to tracks (m)", y = "Point estimates and 90% CI")+
 	theme(
 		panel.background = element_blank(),
 		panel.border = element_rect(size = 1, fill = NA),
@@ -245,29 +245,30 @@ ggsave(
 )
 
 # test robustness of the extended model -----------------------------------
+# data sets from robustness section
 
 # with 3km restriction
-extended_hk_3km <- feols(form_hk_ext, se = "hetero" , data = hk_affected3000, fixef = c("months", "r1_id"))
+# extended_hk_3km <- feols(form_hk_ext, se = "hetero" , data = hk_affected3000, fixef = c("months", "r1_id"))
 
 # without 500k cities
-extended_hk_500k <- feols(form_hk_ext, se = "hetero" , data = hk_wo_bigcit, fixef = c("months", "r1_id"))
+# extended_hk_500k <- feols(form_hk_ext, se = "hetero" , data = hk_wo_bigcit, fixef = c("months", "r1_id"))
 
 # without 100k cities
-extended_hk_100k <- feols(form_hk_ext, se = "hetero" , data = rural, fixef = c("months", "r1_id"))
+# extended_hk_100k <- feols(form_hk_ext, se = "hetero" , data = rural, fixef = c("months", "r1_id"))
 
 # show results
-etable(
-	extended_hk, extended_hk_3km, extended_hk_500k, extended_hk_100k, 
-    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3",
-    headers = c("original ext.", "ext. & 3km", "ext. & 500k", "ext. & 100k")
-)
+# etable(
+# 	extended_hk, extended_hk_3km, extended_hk_500k, extended_hk_100k, 
+#     signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3",
+#     headers = c("original ext.", "ext. & 3km", "ext. & 500k", "ext. & 100k")
+# )
 
 # export
-esttex(
-	extended_hk, extended_hk_3km, extended_hk_500k, extended_hk_100k, file = file.path(outputPath, "regression/hetero_extended_hk_robustcheck.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "extended model hk robust",
-    headers = c("original ext.", "ext. & 3km", "ext. & 500k", "ext. & 100k")
-)
+# esttex(
+# 	extended_hk, extended_hk_3km, extended_hk_500k, extended_hk_100k, file = file.path(outputPath, "regression/hetero_extended_hk_robustcheck.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
+#     signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "extended model hk robust",
+#     headers = c("original ext.", "ext. & 3km", "ext. & 500k", "ext. & 100k")
+# )
 
 ##################################### HETEROGENEITY TEST 2 ############################################################################
 
@@ -733,7 +734,7 @@ noises_extreme_plot <- ggplot(
 		name = ""
 	)+
 	geom_hline(yintercept = 0)+
-	labs(x = "", y = "Coefficients and 90% CI")+
+	labs(x = "", y = "Point estimates and 90% CI")+
 	scale_x_discrete(
 		labels = c(
 			"first_quart" = "High \n exposure",
@@ -860,37 +861,76 @@ esttex(
 coef_table <- rbind(coef_air, coef_ind, coef_str)
 
 ##### plot
-noises_med_plot <- ggplot(data = coef_table, 
-       mapping = aes(x = factor(vars, levels = c("law_passed", "law_inforce")), y = coef, shape = factor(source, levels = c("airport", "industry", "streets"))))+
-  geom_point(position = position_dodge(width = 0.7), size = 2.3)+
-  geom_pointrange(mapping = aes(ymin = conf_min, ymax = conf_max),
-                position = position_dodge(width = 0.7), size = 0.6, show.legend = FALSE)+
-  facet_wrap(~ factor(group, levels = c("below_med", "above_med")), scales = "fixed", labeller = as_labeller(c("below_med" = "Below median",
-                                                                                                   "above_med" = "Above median"), ))+
-  scale_shape_manual(values = c("airport" = 15, 
-                                "industry" = 17,
-                                "streets" = 19),
-                     name = "Noise sources", labels = c("airport" = "Airports",
-                                                        "industry" = "Ind. Plants",
-                                                        "streets" = "Streets"),
-                     guide = guide_legend(override.aes = list(size = 3)))+
-  geom_hline(yintercept = 0)+
-  labs(x = "", y = "Coefficients and 90% CI")+
-  scale_x_discrete(labels = c("law_passed" = "LawPassed",
-                              "law_inforce" = "LawInForce"),
-                   expand = c(0.1, 0.1))+
-  theme(panel.background = element_blank(),
-        panel.border = element_rect(size = 1, fill = NA),
-        axis.text = element_text(size = 12),
-        axis.title = element_text(size = 13),
-        legend.key = element_blank(),
-        strip.background = element_blank(),
-        strip.text = element_text(size = 13),
-        legend.text = element_text(size = 14),
-        legend.title = element_text(size = 14.5))
+noises_med_plot <- ggplot(
+	data = coef_table, 
+    mapping = aes(
+		x = factor(vars, levels = c("law_passed", "law_inforce")),
+		y = coef,
+		shape = factor(source, levels = c("airport", "industry", "streets"))
+	)
+)+
+	geom_point(
+		position = position_dodge(width = 0.7),
+		size = 2.3
+	)+
+	geom_pointrange(
+		mapping = aes(ymin = conf_min, ymax = conf_max),
+		position = position_dodge(width = 0.7),
+		size = 0.6,
+		show.legend = FALSE
+	)+
+	facet_wrap(
+		~ factor(group, levels = c("below_med", "above_med")),
+		scales = "fixed",
+		labeller = as_labeller(
+			c(
+				"below_med" = "Below median",
+				"above_med" = "Above median"
+			)
+		)
+	)+
+	scale_shape_manual(
+		values = c(
+			"airport" = 15, 
+			"industry" = 17,
+			"streets" = 19
+		),
+		name = "Noise sources",
+		labels = c(
+			"airport" = "Airports",
+			"industry" = "Ind. Plants",
+			"streets" = "Streets"
+		),
+		guide = guide_legend(override.aes = list(size = 3))
+	)+
+	geom_hline(yintercept = 0)+
+	labs(x = "", y = "Coefficients and 90% CI")+
+	scale_x_discrete(
+		labels = c(
+			"law_passed" = "LawPassed",
+			"law_inforce" = "LawInForce"
+		),
+		expand = c(0.1, 0.1)
+	)+
+	theme(
+		panel.background = element_blank(),
+		panel.border = element_rect(size = 1, fill = NA),
+		axis.text = element_text(size = 12),
+		axis.title = element_text(size = 13),
+		legend.key = element_blank(),
+		strip.background = element_blank(),
+		strip.text = element_text(size = 13),
+		legend.text = element_text(size = 14),
+		legend.title = element_text(size = 14.5)
+	)
 
-noises_med_plot
-ggsave(plot = noises_med_plot, file.path(outputPath, "graphs/noise_belabov_median.png"))
+ggsave(
+	plot = noises_med_plot,
+	file.path(
+		outputPath,
+		"graphs/noise_belabov_median.png"
+	)
+)
 
 # distance estimation -----------------------------------------------------
 
@@ -1075,7 +1115,7 @@ noises_dist_plot <- ggplot(
 		),
 		guide = guide_legend(override.aes = list(size = 3)))+
 	geom_hline(yintercept = 0)+
-	labs(x = "", y = "Coefficients and 90% CI")+
+	labs(x = "", y = "Point estimates and 90% CI")+
 	scale_x_discrete(
 		labels = c(
 			"law_passed" = "LawPassed",
