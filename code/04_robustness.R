@@ -40,7 +40,6 @@ main_tracks <- st_transform(main_tracks, crs = 32632)
 bula <- st_read(file.path(dataGebiete, "Bundesland/2019/VG250_LAN.shp"))
 bula <- st_transform(bula, crs = 32632)
 
-
 ############################################################
 # preparation - general                                    #
 ############################################################
@@ -260,7 +259,6 @@ esttex(
 # pre-trend analysis
 # split the control period into three periods
 
-
 # function ----------------------------------------------------------------
 # to generate a list of months per period
 
@@ -285,7 +283,6 @@ month_generator <- function(year){
     # return 
     list_of_months
 }
-
 
 # preparation -------------------------------------------------------------
 
@@ -468,11 +465,15 @@ pretrends_plot <- pretrends_plot+
         labels = c("t-4", "t-3", "t-2", "t-1", "t", "t+1", "t+2")
     )
 
-pretrends_plot
-ggsave(plot = pretrends_plot, file.path(outputPath, "graphs/pretrends_plot.png"), height = 7, width = 8)
-
-
-
+ggsave(
+    plot = pretrends_plot,
+    file.path(
+        outputPath,
+        "graphs/pretrends_plot.png"
+    ),
+    height = 7,
+    width = 8
+)
 
 ##################################### ROBUSTNESS TEST 4 ############################################################################
 
@@ -480,33 +481,33 @@ ggsave(plot = pretrends_plot, file.path(outputPath, "graphs/pretrends_plot.png")
 # change dependent variable to laufzeittage                #
 ############################################################
 
-
 ##### dependent variable
 dep_hk_hits <- "laufzeittage"
 
 ##### object characteristics
-char_indep_hk <- c("in_bau", "alter", "alter_squ","wohnflaeche", "wohnflaeche_squ",
-                   "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
-                   "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT", 
-                   "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
-                   "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
-                   "distance_airport", "distance_industry", "distance_streets")
-
+char_indep_hk <- c(
+    "in_bau", "alter", "alter_squ","wohnflaeche", "wohnflaeche_squ",
+    "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
+    "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT", 
+    "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
+    "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
+    "distance_airport", "distance_industry", "distance_streets"
+)
 
 ##### interactions (both event times included)
 int_indep <- c("bf500_only * law_inprogress", "bf500_only * law_established")
 
-
 ##### combine all independent variables
 indep_hk <- c(char_indep_hk, int_indep)
 
-
 ##### define estimation formula
-form_hk_hits <- as.formula(paste(dep_hk_hits,
-                            paste(indep_hk, collapse = " + "),
-                            sep = "~"))
-
-
+form_hk_hits <- as.formula(
+    paste(
+        dep_hk_hits,
+        paste(indep_hk, collapse = " + "),
+        sep = "~"
+    )
+)
 
 # estimation --------------------------------------------------------------
 
@@ -517,13 +518,15 @@ basemodel_hk_duration <- feols(form_hk_hits, se = "hetero" , data = hk_affected,
 # show results
 etable(basemodel_hk_duration, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
 
-
 # export
-esttex(basemodel_hk_duration, file = file.path(outputPath, "regression/robust_basemodel_hk_duration.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk duration", drop = "blid")
-
-
-
+esttex(
+    basemodel_hk_duration,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_duration.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robustness basemodel hk duration", 
+    rop = "blid"
+)
 
 ##################################### ROBUSTNESS TEST 5 ############################################################################
 
@@ -535,31 +538,31 @@ esttex(basemodel_hk_duration, file = file.path(outputPath, "regression/robust_ba
 dep_hk <- "ln_houseprice"
 
 ##### object characteristics
-char_indep_hk <- c("in_bau", "alter", "alter_squ","wohnflaeche", "wohnflaeche_squ",
-                   "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
-                   "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT", 
-                   "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
-                   "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
-                   "distance_airport", "distance_industry", "distance_streets", "i(blid, months)")
-
+char_indep_hk <- c(
+    "in_bau", "alter", "alter_squ","wohnflaeche", "wohnflaeche_squ",
+    "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
+    "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT", 
+    "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
+    "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
+    "distance_airport", "distance_industry", "distance_streets", "i(blid, months)"
+)
 
 ##### interactions (both event times included)
 int_indep <- c("bf500_only * law_inprogress", "bf500_only * law_established")
 
-
 ##### combine all independent variables
 indep_hk <- c(char_indep_hk, int_indep)
 
-
 ##### define estimation formula
-form_hk <- as.formula(paste(dep_hk,
-                            paste(indep_hk, collapse = " + "),
-                            sep = "~"))
-
-
+form_hk <- as.formula(
+    paste(
+        dep_hk,
+        paste(indep_hk, collapse = " + "),
+        sep = "~"
+    )
+)
 
 # -------------------------------------------------------------------------
-
 
 ##### HK
 # estimation
@@ -569,9 +572,14 @@ basemodel_hk_trend <- feols(form_hk, se = "hetero" , data = hk_affected, fixef =
 etable(basemodel_hk_trend, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3", drop = "blid")
 
 # export
-esttex(basemodel_hk_trend, file = file.path(outputPath, "regression/robust_basemodel_hk_trend.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk trend", drop = "blid")
-
+esttex(
+    basemodel_hk_trend,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_trend.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robustness basemodel hk trend",
+    drop = "blid"
+)
 
 ##################################### ROBUSTNESS TEST 6 ############################################################################
 
@@ -580,34 +588,35 @@ esttex(basemodel_hk_trend, file = file.path(outputPath, "regression/robust_basem
 hk_affected$law_complete <- 0
 hk_affected$law_complete[hk_affected$law_established == 1 | hk_affected$law_inprogress == 1] <- 1
 
-
-
 # define variables and formula --------------------------------------------
 
 ##### dependent variable
 dep_hk <- "ln_houseprice"
 
-
 ##### object characteristics
-char_indep_hk <- c("in_bau", "alter", "alter_squ", "wohnflaeche", "wohnflaeche_squ",
-                   "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
-                   "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT", 
-                   "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
-                   "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
-                   "distance_airport", "distance_industry", "distance_streets")
+char_indep_hk <- c(
+    "in_bau", "alter", "alter_squ", "wohnflaeche", "wohnflaeche_squ",
+    "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
+    "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT", 
+    "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
+    "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
+    "distance_airport", "distance_industry", "distance_streets"
+)
 
 ##### interactions (both event times included)
 int_indep <- c("bf500_only * law_complete")
 
-
 ##### combine all independent variables
 indep_hk <- c(char_indep_hk, int_indep)
 
-
 ##### define estimation formula
-form_hk <- as.formula(paste(dep_hk,
-                            paste(indep_hk, collapse = " + "),
-                            sep = "~"))
+form_hk <- as.formula(
+    paste(
+        dep_hk,
+        paste(indep_hk, collapse = " + "),
+        sep = "~"
+    )
+)
 
 # estimation --------------------------------------------------------------
 
@@ -618,22 +627,22 @@ complete_basemodel_hk <- feols(form_hk, se = "hetero" , data = hk_affected, fixe
 # show results
 etable(complete_basemodel_hk, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
 
-
 # export
-esttex(complete_basemodel_hk, file = file.path(outputPath, "regression/robust_basemodel_hk_complete.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk complete treatment period")
-
-
+esttex(
+    complete_basemodel_hk,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_complete.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robustness basemodel hk complete treatment period"
+)
 
 ##################################### ROBUSTNESS TEST 7 ############################################################################
 
 # restricting to control period 
 # shifting treatment period to the middle
 
-
 ##### subset
 control_period <- hk_affected[hk_affected$year_mon <= "2017-06", ]
-
 
 ##### treatment to the middle
 control_period$law_complete_backtwo <- 0
@@ -644,14 +653,15 @@ control_period$law_complete_backtwo[control_period$year_mon >= "2015-07"] <- 1
 ##### dependent variable
 dep_hk <- "ln_houseprice"
 
-
 ##### object characteristics
-char_indep_hk <- c("in_bau", "alter", "alter_squ", "wohnflaeche", "wohnflaeche_squ",
-                   "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
-                   "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT", 
-                   "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
-                   "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
-                   "distance_airport", "distance_industry", "distance_streets")
+char_indep_hk <- c(
+    "in_bau", "alter", "alter_squ", "wohnflaeche", "wohnflaeche_squ",
+    "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
+    "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT", 
+    "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
+    "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
+    "distance_airport", "distance_industry", "distance_streets"
+)
 
 ##### interactions (both event times included)
 int_indep <- c("bf500_only * law_complete_backtwo")
@@ -662,9 +672,13 @@ indep_hk <- c(char_indep_hk, int_indep)
 
 
 ##### define estimation formula
-form_hk <- as.formula(paste(dep_hk,
-                            paste(indep_hk, collapse = " + "),
-                            sep = "~"))
+form_hk <- as.formula(
+    paste(
+        dep_hk,
+        paste(indep_hk, collapse = " + "),
+        sep = "~"
+    )
+)
 
 # estimation --------------------------------------------------------------
 
@@ -677,10 +691,13 @@ etable(complete_basemodel_hk_backtwo, signif.code = c("***" = 0.01, "**" = 0.05,
 
 
 # export
-esttex(complete_basemodel_hk_backtwo, file = file.path(outputPath, "regression/robust_basemodel_hk_controlperiod.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robust model hk control period")
-
-
+esttex(
+    complete_basemodel_hk_backtwo,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_controlperiod.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robust model hk control period"
+)
 
 ##################################### ROBUSTNESS TEST 8 ############################################################################
 
@@ -698,43 +715,52 @@ esttex(complete_basemodel_hk_backtwo, file = file.path(outputPath, "regression/r
 
 ##### function
 exclude_bigseven <- function(df){
-  # dummy for 15 largest cities
-  bigseven_excluded <- df %>% mutate(bigseven = case_when(gid2019_gen == 11000000 | gid2019_gen == 2000000 |
-                                                            gid2019_gen == 9162000 | gid2019_gen == 5315000 |
-                                                            gid2019_gen == 6412000 | gid2019_gen == 8111000 |
-                                                            gid2019_gen == 5111000 | gid2019_gen == 14713000 | 
-                                                            gid2019_gen == 5913000 | gid2019_gen == 5113000 |
-                                                            gid2019_gen == 4011000 | gid2019_gen == 14612000 |
-                                                            gid2019_gen == 3241001 | gid2019_gen == 9564000 |
-                                                            gid2019_gen == 5112000 ~ 1))
-  
-  bigseven_excluded$bigseven[is.na(bigseven_excluded$bigseven)] <- 0
-  
-  # restrict data by dropping Big 7
-  bigseven_excluded <- bigseven_excluded[bigseven_excluded$bigseven == 0, ]
-  
-  # return
-  return(bigseven_excluded)
+    # dummy for 15 largest cities
+    bigseven_excluded <- df %>%
+        mutate(
+            bigseven = case_when(
+                gid2019_gen == 11000000 | gid2019_gen == 2000000 |
+                gid2019_gen == 9162000 | gid2019_gen == 5315000 |
+                gid2019_gen == 6412000 | gid2019_gen == 8111000 |
+                gid2019_gen == 5111000 | gid2019_gen == 14713000 | 
+                gid2019_gen == 5913000 | gid2019_gen == 5113000 |
+                gid2019_gen == 4011000 | gid2019_gen == 14612000 |
+                gid2019_gen == 3241001 | gid2019_gen == 9564000 |
+                gid2019_gen == 5112000 ~ 1
+            )
+        )
+
+    bigseven_excluded$bigseven[is.na(bigseven_excluded$bigseven)] <- 0
+
+    # restrict data by dropping Big 7
+    bigseven_excluded <- bigseven_excluded[bigseven_excluded$bigseven == 0, ]
+
+    # return
+    return(bigseven_excluded)
 }
 
 with_bigseven <- function(df){
-  # dummy for 15 largest cities
-  bigseven_excluded <- df %>% mutate(bigseven = case_when(gid2019_gen == 11000000 | gid2019_gen == 2000000 |
-                                                            gid2019_gen == 9162000 | gid2019_gen == 5315000 |
-                                                            gid2019_gen == 6412000 | gid2019_gen == 8111000 |
-                                                            gid2019_gen == 5111000 | gid2019_gen == 14713000 | 
-                                                            gid2019_gen == 5913000 | gid2019_gen == 5113000 |
-                                                            gid2019_gen == 4011000 | gid2019_gen == 14612000 |
-                                                            gid2019_gen == 3241001 | gid2019_gen == 9564000 |
-                                                            gid2019_gen == 5112000 ~ 1))
-  
-  bigseven_excluded$bigseven[is.na(bigseven_excluded$bigseven)] <- 0
-  
-  # restrict to Big 7
-  bigseven_excluded <- bigseven_excluded[bigseven_excluded$bigseven == 1, ]
-  
-  # return
-  return(bigseven_excluded)
+    # dummy for 15 largest cities
+    bigseven_excluded <- df %>% mutate(
+        bigseven = case_when(
+            gid2019_gen == 11000000 | gid2019_gen == 2000000 |
+            gid2019_gen == 9162000 | gid2019_gen == 5315000 |
+            gid2019_gen == 6412000 | gid2019_gen == 8111000 |
+            gid2019_gen == 5111000 | gid2019_gen == 14713000 | 
+            gid2019_gen == 5913000 | gid2019_gen == 5113000 |
+            gid2019_gen == 4011000 | gid2019_gen == 14612000 |
+            gid2019_gen == 3241001 | gid2019_gen == 9564000 |
+            gid2019_gen == 5112000 ~ 1
+        )
+    )
+    
+    bigseven_excluded$bigseven[is.na(bigseven_excluded$bigseven)] <- 0
+    
+    # restrict to Big 7
+    bigseven_excluded <- bigseven_excluded[bigseven_excluded$bigseven == 1, ]
+    
+    # return
+    return(bigseven_excluded)
 }
 
 ##### apply function
@@ -743,36 +769,35 @@ hk_w_bigcit <- with_bigseven(hk_affected)
 
 # rerun basemodel ---------------------------------------------------------
 
-
 ##### dependent variable
 dep_hk <- "ln_houseprice"
 
-
 ##### object characteristics
-char_indep_hk <- c("in_bau", "alter", "alter_squ", "wohnflaeche", "wohnflaeche_squ",
-                   "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
-                   "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT",
-                   "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
-                   "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
-                   "distance_airport", "distance_industry", "distance_streets")
-
+char_indep_hk <- c(
+    "in_bau", "alter", "alter_squ", "wohnflaeche", "wohnflaeche_squ",
+    "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
+    "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT",
+    "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
+    "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
+    "distance_airport", "distance_industry", "distance_streets"
+)
 
 ##### interactions (both event times included)
 int_indep <- c("law_inprogress * bf500_only", "law_established * bf500_only")
 
-
 ##### combine all independent variables
 indep_hk <- c(char_indep_hk, int_indep)
 
-
 ##### define estimation formula
-form_hk <- as.formula(paste(dep_hk,
-                            paste(indep_hk, collapse = " + "),
-                            sep = "~"))
-
+form_hk <- as.formula(
+    paste(
+        dep_hk,
+        paste(indep_hk, collapse = " + "),
+        sep = "~"
+    )
+)
 
 # estimation --------------------------------------------------------------
-
 
 ##### HK
 # estimation
@@ -783,10 +808,21 @@ basemodel_hk_bigcit <- feols(form_hk, se = "hetero" , data = hk_w_bigcit, fixef 
 etable(basemodel_hk_wobigcit, basemodel_hk_bigcit, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
 
 # export
-esttex(basemodel_hk_wobigcit, file = file.path(outputPath, "regression/robust_basemodel_hk_wobigcit.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robust basemodel hk without big cities")
-esttex(basemodel_hk_bigcit, file = file.path(outputPath, "regression/robust_basemodel_hk_bigcit.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robust basemodel hk with big cities")
+esttex(
+    basemodel_hk_wobigcit,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_wobigcit.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robust basemodel hk without big cities"
+)
+
+esttex(
+    basemodel_hk_bigcit,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_bigcit.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robust basemodel hk with big cities"
+)
 
 ##################################### ROBUSTNESS TEST 9 ############################################################################
 # excluding largest cities (Großstädte) (100k)
@@ -794,21 +830,32 @@ esttex(basemodel_hk_bigcit, file = file.path(outputPath, "regression/robust_base
 gemeindetyp <- read.xlsx(file.path(dataPath, "gemeindetyp/gemeindetyp.xlsx"), sheet = 1)
 
 # drop NAs
-gemeindetyp <- gemeindetyp %>% filter(!is.na(Aggregat))
+gemeindetyp <- gemeindetyp %>%
+    filter(!is.na(Aggregat))
 
 # clean
-gemeindetyp <- gemeindetyp %>% select(Kennziffer, `Stadt-/Gemeindetyp`)
+gemeindetyp <- gemeindetyp %>%
+    select(Kennziffer, `Stadt-/Gemeindetyp`)
+
 colnames(gemeindetyp) <- c("ags", "city_type")
 
 # adjust AGS 
 gemeindetyp$ags <- as.numeric(gemeindetyp$ags)
 
 # merge to houses
-hk_affected <- merge(hk_affected, gemeindetyp, by.x = "gid2019_gen", by.y = "ags", all.x = TRUE)
+hk_affected <- merge(
+    hk_affected,
+    gemeindetyp,
+    by.x = "gid2019_gen",
+    by.y = "ags",
+    all.x = TRUE
+)
 
+rural <- hk_affected %>%
+    filter(city_type != 10)
 
-rural <- hk_affected %>% filter(city_type != 10)
-metro <- hk_affected %>% filter(city_type == 10)
+metro <- hk_affected %>%
+    filter(city_type == 10)
 
 # estimation --------------------------------------------------------------
 
@@ -819,15 +866,27 @@ basemodel_hk_metro <- feols(form_hk, se = "hetero" , data = metro, fixef = c("mo
 etable(basemodel_hk_rural, basemodel_hk_metro, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
 
 # export
-esttex(basemodel_hk_rural, file = file.path(outputPath, "regression/robust_basemodel_hk_rural.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robust basemodel hk without largest cities")
-esttex(basemodel_hk_metro, file = file.path(outputPath, "regression/robust_basemodel_hk_metro.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robust basemodel hk with largest cities")
+esttex(
+    basemodel_hk_rural,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_rural.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robust basemodel hk without largest cities"
+)
+
+esttex(
+    basemodel_hk_metro,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_metro.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robust basemodel hk with largest cities"
+)
 
 ##################################### ROBUSTNESS TEST 10 ############################################################################
 # exlude the months that could be partially treated and control
 
-hk_affected_month_drop <- hk_affected %>% filter(year_mon != "2017-07" & year_mon != "2020-12") 
+hk_affected_month_drop <- hk_affected %>%
+    filter(year_mon != "2017-07" & year_mon != "2020-12") 
 
 # define variables and formula --------------------------------------------
 
@@ -835,28 +894,30 @@ hk_affected_month_drop <- hk_affected %>% filter(year_mon != "2017-07" & year_mo
 dep_hk <- "ln_houseprice"
 
 ##### object characteristics
-char_indep_hk <- c("in_bau", "alter", "alter_squ","wohnflaeche", "wohnflaeche_squ",
-                   "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
-                   "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT",
-                   "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
-                   "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter", 
-                   "distance_airport", "distance_industry", "distance_streets")
-
+char_indep_hk <- c(
+    "in_bau", "alter", "alter_squ","wohnflaeche", "wohnflaeche_squ",
+    "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
+    "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT",
+    "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
+    "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter", 
+    "distance_airport", "distance_industry", "distance_streets"
+)
 
 ##### interactions (both event times included)
 int_indep <- c("bf500_only * law_inprogress", "bf500_only * law_established")
-
 
 ##### combine all independent variables
 indep_hk <- c(char_indep_hk, int_indep)
 
 
 ##### define estimation formula
-form_hk <- as.formula(paste(dep_hk,
-                            paste(indep_hk, collapse = " + "),
-                            sep = "~"))
-
-
+form_hk <- as.formula(
+    paste(
+        dep_hk,
+        paste(indep_hk, collapse = " + "),
+        sep = "~"
+    )
+)
 
 # estimation --------------------------------------------------------------
 
@@ -868,15 +929,20 @@ basemodel_hk_mixedmonths <- feols(form_hk, se = "hetero" , data = hk_affected_mo
 etable(basemodel_hk_mixedmonths, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
 
 # export
-esttex(basemodel_hk_mixedmonths, file = file.path(outputPath, "regression/robust_basemodel_hk_mixedmonths.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk mixed months")
-
+esttex(
+    basemodel_hk_mixedmonths,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_mixedmonths.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robustness basemodel hk mixed months"
+)
 
 ##################################### ROBUSTNESS TEST 11 ############################################################################
 # neutral zone
 
 # remove objects between 500 and 1000 meters
-hk_affected_nz <- hk_affected %>% filter(bf750 != 1 & bf1000 != 1)
+hk_affected_nz <- hk_affected %>%
+    filter(bf750 != 1 & bf1000 != 1)
 
 ##### HK
 # estimation
@@ -886,11 +952,13 @@ basemodel_hk_neutralzone <- feols(form_hk, se = "hetero" , data = hk_affected_nz
 etable(basemodel_hk_neutralzone, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
 
 # export
-esttex(basemodel_hk_neutralzone, file = file.path(outputPath, "regression/robust_basemodel_hk_neutralzone.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk neutral zone")
-
-
-
+esttex(
+    basemodel_hk_neutralzone,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_neutralzone.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robustness basemodel hk neutral zone"
+)
 
 ##################################### combined export ############################################################################
 
@@ -899,18 +967,29 @@ esttex(basemodel_hk_neutralzone, file = file.path(outputPath, "regression/robust
 etable(basemodel_hk_3000k, basemodel_hk_wobigcit, basemodel_hk_rural, basemodel_hk_neutralzone, basemodel_hk_regFE, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3", drop = "blid")
 
 # export
-esttex(basemodel_hk_3000k, basemodel_hk_wobigcit, basemodel_hk_rural, basemodel_hk_neutralzone, basemodel_hk_regFE, file = file.path(outputPath, "regression/robust_basemodel_hk_combined_table1.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk combined table 1", drop = "blid")
-
+esttex(
+    basemodel_hk_3000k, basemodel_hk_wobigcit, basemodel_hk_rural,
+    basemodel_hk_neutralzone, basemodel_hk_regFE,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_combined_table1.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robustness basemodel hk combined table 1",
+    drop = "blid"
+)
 
 ##### table 2
 etable(basemodel_hk_trend, basemodel_hk_pretrend, complete_basemodel_hk_backtwo, complete_basemodel_hk, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3", drop = "blid")
 
 # export
-esttex(basemodel_hk_trend, basemodel_hk_pretrend, complete_basemodel_hk_backtwo, complete_basemodel_hk, file = file.path(outputPath, "regression/robust_basemodel_hk_combined_table2.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk combined table 2", drop = "blid")
-
-
+esttex(
+    basemodel_hk_trend, basemodel_hk_pretrend, complete_basemodel_hk_backtwo,
+    complete_basemodel_hk,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_combined_table2.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robustness basemodel hk combined table 2",
+    drop = "blid"
+)
 
 ##################################### ROBUSTNESS TEST 12 ############################################################################
 # leave one out estimation: states
@@ -954,46 +1033,53 @@ states_st <- hk_affected %>% filter(blid != 15)
 states_th <- hk_affected %>% filter(blid != 16)
 
 ##### make list
-states_subsets <- list(states_sh, states_hh, states_ni, states_hb, states_nw, states_he, states_rp, states_bw,
-                       states_by, states_sl, states_be, states_bb, states_mv, states_sn, states_st, states_th)
+states_subsets <- list(
+    states_sh, states_hh, states_ni, states_hb, states_nw, states_he,
+    states_rp, states_bw,
+    states_by, states_sl, states_be, states_bb, states_mv, states_sn,
+    states_st, states_th
+)
 
 # rename list elements
-names(states_subsets) <- c("SH", "HH", "NI", "HB", "NW", "HE", "RP", "BW",
-                           "BY", "SL", "BE", "BB", "MV", "SN", "ST", "TH")
+names(states_subsets) <- c(
+    "SH", "HH", "NI", "HB", "NW", "HE", "RP", "BW",
+    "BY", "SL", "BE", "BB", "MV", "SN", "ST", "TH"
+)
 
 ##### formula
 ##### dependent variable
 dep_hk <- "ln_houseprice"
 
-
 ##### object characteristics
-char_indep_hk <- c("in_bau", "alter", "alter_squ", "wohnflaeche", "wohnflaeche_squ",
-                   "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
-                   "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT",
-                   "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
-                   "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
-                   "distance_airport", "distance_industry", "distance_streets")
-
+char_indep_hk <- c(
+    "in_bau", "alter", "alter_squ", "wohnflaeche", "wohnflaeche_squ",
+    "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
+    "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT",
+    "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
+    "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
+    "distance_airport", "distance_industry", "distance_streets"
+)
 
 ##### interactions (both event times included)
 int_indep <- c("law_inprogress * bf500_only", "law_established * bf500_only")
 
-
 ##### combine all independent variables
 indep_hk <- c(char_indep_hk, int_indep)
 
-
 ##### define estimation formula
-form_hk <- as.formula(paste(dep_hk,
-                            paste(indep_hk, collapse = " + "),
-                            sep = "~"))
-
+form_hk <- as.formula(
+    paste(
+        dep_hk,
+        paste(indep_hk, collapse = " + "),
+        sep = "~"
+    )
+)
 
 # estimation --------------------------------------------------------------
 
 # estimation function
 est_fm <- function(df, fm){
-  feols(fml = fm, data = df, se = "hetero", fixef = c("months", "r1_id"))
+    feols(fml = fm, data = df, se = "hetero", fixef = c("months", "r1_id"))
 }
 
 # estimate
@@ -1002,38 +1088,44 @@ looe_states <- lapply(states_subsets, est_fm, form_hk)
 etable(looe_states, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
 
 # export
-esttex(looe_states, file = file.path(outputPath, "regression/robust_basemodel_hk_looe_states.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk LOOE states", drop = "blid")
-
+esttex(
+    looe_states,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_looe_states.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robustness basemodel hk LOOE states",
+    drop = "blid"
+)
 
 ##################################### ROBUSTNESS TEST 13 ############################################################################
-
 
 # -------------------------------------------------------------------------
 ##### preparation function
 prep_data <- function(data_prepared){
-
-  # restrict the data set 
-  # to municipalities that are crossed by tracks
-  data_prepared <- data_prepared[data_prepared$affected_munic == 1, ]
-  
-  # construct dummy for the months the law is in force (but not punishable)
-  data_prepared$law_inprogress <- ifelse(test = data_prepared$year_mon >= "2017-07" & data_prepared$year_mon <= "2020-11",
-                                         yes = 1,
-                                         no = 0)
-  
-  # construct dummy for the months the law is in force (i.e ban is in force)
-  data_prepared$law_established <- ifelse(test = data_prepared$year_mon >= "2020-12",
-                                          yes = 1,
-                                          no = 0)
-  
-  # make months factor
-  data_prepared$months <- as.factor(data_prepared$year_mon)
-  
-  # return
-  return(data_prepared)
+    # restrict the data set 
+    # to municipalities that are crossed by tracks
+    data_prepared <- data_prepared[data_prepared$affected_munic == 1, ]
+    
+    # construct dummy for the months the law is in force (but not punishable)
+    data_prepared$law_inprogress <- ifelse(
+        test = data_prepared$year_mon >= "2017-07" & data_prepared$year_mon <= "2020-11",
+        yes = 1,
+        no = 0
+    )
+    
+    # construct dummy for the months the law is in force (i.e ban is in force)
+    data_prepared$law_established <- ifelse(
+        test = data_prepared$year_mon >= "2020-12",
+        yes = 1,
+        no = 0
+    )
+    
+    # make months factor
+    data_prepared$months <- as.factor(data_prepared$year_mon)
+    
+    # return
+    return(data_prepared)
 }
-
 
 ##### apply function
 hk_alt_rail_affected <- prep_data(hk_alt_rail)
@@ -1045,26 +1137,29 @@ dep_hk <- "ln_houseprice"
 
 
 ##### object characteristics
-char_indep_hk <- c("in_bau", "alter", "alter_squ", "wohnflaeche", "wohnflaeche_squ",
-                   "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
-                   "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT", 
-                   "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
-                   "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
-                   "distance_airport", "distance_industry", "distance_streets")
-
+char_indep_hk <- c(
+    "in_bau", "alter", "alter_squ", "wohnflaeche", "wohnflaeche_squ",
+    "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
+    "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT", 
+    "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
+    "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter",
+    "distance_airport", "distance_industry", "distance_streets"
+)
 
 ##### interactions (both event times included)
 int_indep <- c("law_inprogress * bf500_only", "law_established * bf500_only")
 
-
 ##### combine all independent variables
 indep_hk <- c(char_indep_hk, int_indep)
 
-
 ##### define estimation formula
-form_hk <- as.formula(paste(dep_hk,
-                            paste(indep_hk, collapse = " + "),
-                            sep = "~"))
+form_hk <- as.formula(
+    paste(
+        dep_hk,
+        paste(indep_hk, collapse = " + "),
+        sep = "~"
+    )
+)
 
 # estimation --------------------------------------------------------------
 
@@ -1076,9 +1171,13 @@ basemodel_hk <- feols(form_hk, se = "hetero", data = hk_alt_rail_affected, fixef
 etable(basemodel_hk, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
 
 # export
-esttex(basemodel_hk, file = file.path(outputPath, "regression/robust_hk_alt_rail.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robust with alternative railroads")
-
+esttex(
+    basemodel_hk,
+    file = file.path(outputPath, "regression/robust_hk_alt_rail.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robust with alternative railroads"
+)
 
 # plot railrods -----------------------------------------------------------
 
@@ -1087,22 +1186,72 @@ esttex(basemodel_hk, file = file.path(outputPath, "regression/robust_hk_alt_rail
 library(MetBrewer)
 color <- met.brewer(name = "Greek", n = 5, type = "discrete")
 
-alt_rail_map <-   tm_shape(bula)+
-  tm_borders(col = "gray70")+
-  tm_shape(alt_rail)+
-  tm_lines(col = color[3], lwd = 3)+
-  tm_shape(main_tracks)+
-  tm_lines(col = "black", lwd = 2)+
-  tm_add_legend(type = "line",
-                labels = c("Freight train corridors", "Main railroads"),
-                col = c("Freight train corridors" = "black",
-                        "Main railroads" = color[3]),
-                lwd = 3)+
-  tm_layout(legend.position = c("right", 0.915),
-            legend.frame = TRUE)
+alt_rail_map <- ggplot()+
+    geom_sf(
+        aes(geometry = geometry),
+        fill = NA,
+        col = "gray70",
+        data = bula
+    )+
+    geom_sf(
+        aes(
+            geometry = geometry,
+            col = "alt_rail"
+        ),
+        lwd = 1.3,
+        data = alt_rail
+    )+
+    geom_sf(
+        aes(
+            geometry = geometry,
+            col = "main_tracks"
+        ),
+        lwd = 1.2,
+        data = main_tracks
+    )+
+    scale_color_manual(
+        values = c(
+            "alt_rail" = color[3],
+            "main_tracks" = "black"
+        ),
+        labels = c(
+            "alt_rail" = "Main railroads",
+            "main_tracks" = "Freight train corridors"
+        ),
+        name = ""
+    )+
+    theme_void()+
+    theme(
+        legend.position = "bottom",
+        legend.key.size = unit(0.5, "cm"),
+        legend.text = element_text(size = 14)
+    )
 
-alt_rail_map
-tmap_save(alt_rail_map, file.path(outputPath, "graphs/alt_railroads.png"), width = 10, height = 13, units = "cm")
+ggsave(
+    plot = alt_rail_map,
+    file.path(
+        outputPath,
+        "graphs/alt_railroads.png"
+    ),
+    dpi = 400
+)
+
+# alt_rail_map <-   tm_shape(bula)+
+#     tm_borders(col = "gray70")+
+#     tm_shape(alt_rail)+
+#     tm_lines(col = color[3], lwd = 3)+
+#     tm_shape(main_tracks)+
+#     tm_lines(col = "black", lwd = 2)+
+#     tm_add_legend(type = "line",
+#                 labels = c("Freight train corridors", "Main railroads"),
+#                 col = c("Freight train corridors" = "black",
+#                         "Main railroads" = color[3]),
+#                 lwd = 3)+
+#     tm_layout(legend.position = c("right", 0.915),
+#             legend.frame = TRUE)
+
+# alt_rail_map
+# tmap_save(alt_rail_map, file.path(outputPath, "graphs/alt_railroads.png"), width = 10, height = 13, units = "cm")
 
 
 ##################################### ROBUSTNESS TEST 14 ############################################################################
@@ -1117,15 +1266,20 @@ corridors_danube <- hk_affected %>% filter(closest_corridor != "danube")
 corridors_atlantic <- hk_affected %>% filter(closest_corridor != "atlantic")
 
 ##### make list
-corridors_subsets <- list(corridors_scanmed, corridors_orient, corridors_northsea, 
-                          corridors_rine, corridors_danube, corridors_atlantic)
-names(corridors_subsets) <- c("wo_scanmed", "wo_orient", "wo_northsea", "wo_rine", "wo_danube", "wo_atlantic")
+corridors_subsets <- list(
+    corridors_scanmed, corridors_orient, corridors_northsea, 
+    corridors_rine, corridors_danube, corridors_atlantic
+)
+
+names(corridors_subsets) <- c(
+    "wo_scanmed", "wo_orient", "wo_northsea", "wo_rine", "wo_danube", "wo_atlantic"
+)
 
 # estimation --------------------------------------------------------------
 
 # estimation function
 est_fm <- function(df, fm){
-  feols(fml = fm, data = df, se = "hetero", fixef = c("months", "r1_id"))
+    feols(fml = fm, data = df, se = "hetero", fixef = c("months", "r1_id"))
 }
 
 # estimate
@@ -1135,36 +1289,81 @@ looe_corridors <- lapply(corridors_subsets, est_fm, form_hk)
 etable(looe_corridors, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
 
 # export
-esttex(looe_corridors, file = file.path(outputPath, "regression/robust_basemodel_hk_looe_corridors.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk LOOE corridors", drop = "blid",
-       headers = c("wo_scanmed", "wo_orient", "wo_northsea", "wo_rine", "wo_danube", "wo_atlantic"))
-
-
+esttex(
+    looe_corridors,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_looe_corridors.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robustness basemodel hk LOOE corridors",
+    drop = "blid",
+    headers = c("wo_scanmed", "wo_orient", "wo_northsea", "wo_rine", "wo_danube", "wo_atlantic")
+)
 
 # plot corridors ----------------------------------------------------------
 
 pal <- RColorBrewer::brewer.pal(n = 6, name = "Dark2")
 
-plot_corr <- tm_shape(bula)+
-  tm_borders(col = "gray70")+
-  tm_shape(main_tracks)+
-  tm_lines(col = "corridor", 
-           title.col = "Corridor",
-           lwd = 3,
-           palette = pal,
-           labels = c("atlantic" = "Atlantic",
-                      "danube" = "Rhine-Danube",
-                      "northsea" = "North Sea-Baltic",
-                      "orient" = "Orient/East-Med",
-                      "rine" = "Rhine-Alpine",
-                      "scanmed" = "ScanMed"))+
-  tm_layout(legend.outside = TRUE,
-            legend.position = c(0.1, "center"),
-            legend.text.size = 0.8,
-            legend.title.size = 1.1)
+plot_corr <- ggplot()+
+    geom_sf(
+        aes(geometry = geometry),
+        fill = NA,
+        col = "gray70",
+        data = bula
+    )+
+    geom_sf(
+        aes(geometry = geometry, col = corridor),
+        lwd = 1.2,
+        data = main_tracks
+    )+
+    scale_color_manual(
+        values = pal,
+        labels = c(
+            "atlantic" = "Atlantic",
+            "danube" = "Rhine-Danube",
+            "northsea" = "North Sea-Baltic",
+            "orient" = "Orient/East-Med",
+            "rine" = "Rhine-Alpine",
+            "scanmed" = "ScanMed"
+        ),
+        name = "Corridor"
+    )+
+    theme_void()+
+    theme(
+        legend.position = "bottom",
+        legend.key.size = unit(0.5, "cm"),
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 15)
+    )
 
-plot_corr
-tmap_save(plot_corr, file.path(outputPath, "graphs/tracks_corridors.png"))  
+ggsave(
+    plot = plot_corr,
+    file.path(
+        outputPath,
+        "graphs/tracks_corridors.png"
+    ),
+    dpi = 400
+)
+
+# plot_corr <- tm_shape(bula)+
+#   tm_borders(col = "gray70")+
+#   tm_shape(main_tracks)+
+#   tm_lines(col = "corridor", 
+#            title.col = "Corridor",
+#            lwd = 3,
+#            palette = pal,
+#            labels = c("atlantic" = "Atlantic",
+#                       "danube" = "Rhine-Danube",
+#                       "northsea" = "North Sea-Baltic",
+#                       "orient" = "Orient/East-Med",
+#                       "rine" = "Rhine-Alpine",
+#                       "scanmed" = "ScanMed"))+
+#   tm_layout(legend.outside = TRUE,
+#             legend.position = c(0.1, "center"),
+#             legend.text.size = 0.8,
+#             legend.title.size = 1.1)
+
+# plot_corr
+# tmap_save(plot_corr, file.path(outputPath, "graphs/tracks_corridors.png"))  
 
 
 ##################################### ROBUSTNESS TEST 15 ############################################################################
@@ -1176,28 +1375,29 @@ tmap_save(plot_corr, file.path(outputPath, "graphs/tracks_corridors.png"))
 dep_hk <- "ln_houseprice"
 
 ##### object characteristics
-char_indep_hk <- c("in_bau", "alter", "alter_squ","wohnflaeche", "wohnflaeche_squ",
-                   "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
-                   "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT",
-                   "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
-                   "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter", 
-                   "distance_airport", "distance_industry", "distance_streets", "distance_noise_barrier")
-
+char_indep_hk <- c(
+    "in_bau", "alter", "alter_squ","wohnflaeche", "wohnflaeche_squ",
+    "grundstuecksflaeche", "grundstuecksflaeche_squ", "anzahletagen", "anzahletagenUNBEKANNT",
+    "badezimmer", "badezimmerUNBEKANNT", "as.factor(heizungsart)", "heizungsartUNBEKANNT",
+    "as.factor(ausstattung)", "ausstattungUNBEKANNT", "zimmeranzahl", "as.factor(objektzustand)", "objektzustandUNBEKANNT",
+    "distance_station", "distance_junction", "distance_largcenter", "distance_medcenter", "distance_smalcenter", 
+    "distance_airport", "distance_industry", "distance_streets", "distance_noise_barrier"
+)
 
 ##### interactions (both event times included)
 int_indep <- c("bf500_only * law_inprogress", "bf500_only * law_established")
 
-
 ##### combine all independent variables
 indep_hk <- c(char_indep_hk, int_indep)
 
-
 ##### define estimation formula
-form_hk <- as.formula(paste(dep_hk,
-                            paste(indep_hk, collapse = " + "),
-                            sep = "~"))
-
-
+form_hk <- as.formula(
+    paste(
+        dep_hk,
+        paste(indep_hk, collapse = " + "),
+        sep = "~"
+    )
+)
 
 # estimation --------------------------------------------------------------
 
@@ -1209,5 +1409,10 @@ basemodel_noisebar <- feols(form_hk, se = "hetero" , data = hk_affected, fixef =
 etable(basemodel_noisebar, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
 
 # export
-esttex(basemodel_noisebar, file = file.path(outputPath, "regression/robust_basemodel_hk_noisebar.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
-       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "robustness basemodel hk noisebar")
+esttex(
+    basemodel_noisebar,
+    file = file.path(outputPath, "regression/robust_basemodel_hk_noisebar.tex"),
+    replace = TRUE, digits = "r3", dict = tablabel_objchar, se = "hetero",
+    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10),
+    title = "robustness basemodel hk noisebar"
+)
