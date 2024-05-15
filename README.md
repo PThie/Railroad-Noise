@@ -3,6 +3,7 @@
 This repository provides the coding for the research project "Evaluation of railroad noise: The proximity to railroads and its effect on house prices".
 
 Author: Patrick Thiel
+
 Code author: Patrick Thiel
 
 ## Abstract
