@@ -219,7 +219,7 @@ hk.sf$distance_streets <- as.numeric(st_distance(hk.sf, streets[nearest, ], by_e
 # -------------------------------------------------------------------------
 # noise 
 nearest_noisebar <- st_nearest_feature(hk.sf, noise_bar)
-hk.sf$distance_noise_barrier <- as.numeric(st_distance(hk.sf, noise_bar[nearest_noisebar, ], by_element = TRUE) / 1000)s
+hk.sf$distance_noise_barrier <- as.numeric(st_distance(hk.sf, noise_bar[nearest_noisebar, ], by_element = TRUE) / 1000)
 
 # -------------------------------------------------------------------------
 
