@@ -79,3 +79,9 @@ source(file.path(codePath, "02_descriptives.r"), encoding = "UTF-8")
 ############################################################
 # Stage 03: Estimation                                     #
 ############################################################
+
+source(file.path(codePath, "03_estimation.r"), encoding = "UTF-8")
+
+source(file.path(codePath, "04_heterogeneity.r"), encoding = "UTF-8")
+
+source(file.path(codePath, "04_robustness.r"), encoding = "UTF-8")
