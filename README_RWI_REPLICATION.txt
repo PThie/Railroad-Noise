@@ -90,9 +90,10 @@ The relationship between files is orchestrated by ../code/00_master.R.
 
 
 DATA-SPECIFIC INFORMATION FOR: [FILENAME]
-<repeat this section for each dataset, folder or file, as appropriate>
+The project uses the RWI-GEO-RED Houses for Sale data set with exact geographical locations.
 
-<Specialized formats or other abbreviations used>
+RWI-GEO-RED: RWI Real Estate Data - Houses for Sale 
+DOI: 10.7807/immo:red:hk:v5.1
 
 
 
