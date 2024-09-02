@@ -96,6 +96,32 @@ etable(basemodel_hk, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), dig
 esttex(basemodel_hk, file = file.path(outputPath, "regression/basemodel_hk.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
        signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "basemodel hk")
 
+############################################################
+# east and west germany                                    #
+############################################################
+
+# split the sample
+# East: Brandenburg, Mecklenburg-Vorpommern, Sachsen, Sachsen-Anhalt und Thüringen
+# Berlin constitutes a special case
+
+east_houses <- hk_affected |>
+  dplyr::filter(blid %in% c(12, 13, 14, 15, 16))
+
+west_houses <- hk_affected |>
+  dplyr::filter(!blid %in% c(12, 13, 14, 15, 16, 11))
+
+# estimation
+
+basemodel_hk_east <- feols(form_hk, se = "hetero", data = east_houses, fixef = c("months", "r1_id"))
+basemodel_hk_west <- feols(form_hk, se = "hetero", data = west_houses, fixef = c("months", "r1_id"))
+
+# show results
+etable(basemodel_hk_east, basemodel_hk_west, signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), digits = "r3")
+
+esttex(basemodel_hk_east, basemodel_hk_west, file = file.path(outputPath, "regression/basemodel_hk_east_west.tex"), replace = TRUE, digits = "r3", dict = tablabel_objchar,
+       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10), title = "basemodel hk east west")
+
+
 
 # NOT USED ----------------------------------------------------------------
 
