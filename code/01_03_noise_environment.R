@@ -259,20 +259,75 @@ tmap_save(
 
 # combine tracks and treated municipalities -------------------------------
 
-map_tracks_treated <-   tm_shape(gem_untreated)+
-    tm_borders(col = "gray80")+
-    tm_shape(gem_treated)+
-    tm_polygons(col = "grey70")+
-    tm_shape(main_tracks)+
-    tm_lines(col = "black", lwd = 2.5)+
-    tm_layout(frame = FALSE)
+# select major cities (for reference on map)
+# Berlin, Hamburg, Frankfurt aM, Munich, Cologne, Stuttgart
+major_cities <- gem |>
+    dplyr::filter(AGS %in% c(
+        "11000000", "02000000", "06412000", "09162000",
+        "05315000", "08111000"
+    )) |>
+    # drop Hamburg's islands
+    dplyr::filter(logical == 1) |>
+    sf::st_centroid() |>
+    dplyr::mutate(
+        GEN = stringi::stri_trans_general(GEN, "de-ASCII; Latin-ASCII"),
+        # add city labels and translate to English
+        munic_label = GEN,
+        munic_label = dplyr::case_when(
+            munic_label == "Koeln" ~ "Cologne",
+            munic_label == "Muenchen" ~ "Munich",
+            munic_label == "Frankfurt am Main" ~ "Frankfurt",
+            TRUE ~ munic_label
+        ),
+        lon = sf::st_coordinates(geometry)[, 1],
+        lat = sf::st_coordinates(geometry)[, 2]
+    ) |>
+    sf::st_drop_geometry()
 
-tmap_save(
-    map_tracks_treated,
+map_tracks_treated <- ggplot()+
+    geom_sf(
+        data = gem_untreated,
+        aes(geometry = geometry),
+        col = "grey80"
+    )+
+    geom_sf(
+        data = gem_treated,
+        aes(geometry = geometry),
+        fill = "grey70"
+    )+
+    geom_sf(
+        data = main_tracks,
+        aes(geometry = geometry),
+        col = "black",
+        lwd = 1.2
+    )+
+    geom_point(
+        data = major_cities,
+        aes(x = lon, y = lat),
+        col = "black",
+        shape = 15
+    )+
+    geom_label(
+        data = major_cities,
+        aes(x = lon, y = lat, label = munic_label),
+        size = 5,
+        hjust = -0.1,
+        vjust = 0.5,
+        label.padding = unit(0.15, "lines"),
+        label.size = 0.25, 
+        color = "black",
+        fill = "white"
+    )+
+    theme_void()
+
+ggsave(
+    plot = map_tracks_treated,
     file.path(
         outputPath,
-        "graphs/map_freight_tracks_municipalities.png"
-    )
+        "graphs",
+        "map_freight_tracks_municipalities.png"
+    ),
+    dpi = 400
 )
 
 # -------------------------------------------------------------------------
@@ -878,6 +933,113 @@ ggsave(
     file.path(
         outputPath,
         "graphs/num_trains_by_month_LDEN.png"
+    ),
+    height = 10,
+    width = 13
+)
+
+##### Passings with respect to COVID-19
+
+# average before and after COVID-19 (March 2020 as cutoff)
+avg_passing_covid <- noise_summary |>
+    dplyr::filter(date < "2020-03-01" | date > "2020-03-31") |>
+    dplyr::mutate(
+        covid_period = dplyr::case_when(
+            date < "2020-03-01" ~ "before covid",
+            date > "2020-03-31" ~ "after covid"
+        )
+    ) |>
+    dplyr::group_by(covid_period) |>
+    dplyr::summarise(
+        mean_num_pass = mean(mean_num_pass_lden, na.rm = TRUE),
+        mean_num_freight = mean(mean_num_freight_lden, na.rm = TRUE)
+    ) |>
+    as.data.frame()
+
+# export
+openxlsx::write.xlsx(
+    avg_passing_covid,
+    file.path(
+        outputPath,
+        "descriptives",
+        "avg_passing_covid.xlsx"
+    )
+)
+
+# plot labels
+breaks <- seq(as.Date("2019-04-01"), as.Date("2022-03-01"), by = "2 months")
+breaks <- format(breaks, "%Y-%m")
+
+# redo previous plot with COVID-19
+num_trains_month_covid <- ggplot(noise_summary_month)+
+    geom_line(
+        aes(
+            x = plot_date,
+            y = mean_num_freight_lden,
+            col = "freight",
+            group = 1.2
+        ),
+        size = 1
+    )+
+    geom_line(
+        aes(
+            x = plot_date,
+            y = mean_num_pass_lden,
+            col = "passenger",
+            group = 1.2
+        ),
+        size = 1
+    )+
+    scale_color_manual(
+        name = "",
+        values = c(
+            "freight" = "seagreen",
+            "passenger" = "firebrick2"
+        ),
+        labels = c(
+            "freight" = "Freight trains",
+            "passenger" = "Passenger trains"
+        )
+    )+
+    scale_y_continuous(
+        breaks = seq(0, 220, 20),
+        limits = c(0, 230)
+    )+
+    scale_x_yearmon(
+        breaks = seq(min(noise_summary_month$plot_date), max(noise_summary_month$plot_date), 0.34),
+        labels = month_labels
+    )+
+    labs(
+        x = "",
+        y = "Average number of trains"
+    )+
+    geom_segment(
+        # use as.numeric(noise_summary_month$plot_date) to find number for month
+        aes(
+            x = 2020.167,
+            xend = 2020.167,
+            y = 0,
+            yend = 220
+        ),
+        linetype = "dashed",
+        size = 1
+    )+
+    geom_text(
+        aes(
+            x = 2020.167,
+            y = 224,
+            label = "Start COVID-19"
+        ),
+        size = 8
+    )+
+    owntheme
+
+ggsave(
+    plot = num_trains_month_covid,
+    file.path(
+        outputPath,
+        "graphs",
+        "num_trains_by_month_LDEN_covid.png"
     ),
     height = 10,
     width = 13
