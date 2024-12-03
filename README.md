@@ -28,4 +28,4 @@ https://www.tandfonline.com/doi/full/10.1080/08965803.2024.2419313
 
 ## DOI for repository
 
-- Release v2.0: [![DOI:10.5281/zenodo.14265269](http://img.shields.io/badge/DOI-10.5281/zenodo.10812938-048BC0.svg)](https://zenodo.org/account/settings/github/repository/PThie/Railroad-Noise)
+- Release v2.0: [![DOI:10.5281/zenodo.14265269](http://img.shields.io/badge/DOI-10.5281/zenodo.14265269-048BC0.svg)](https://zenodo.org/account/settings/github/repository/PThie/Railroad-Noise)
