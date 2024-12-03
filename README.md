@@ -1,23 +1,27 @@
-# Evaluation of railroad noise: The proximity to railroads and its effect on house prices
+# The Impact of Germany’s Railroad Noise Protection Act on House Values
 
-This repository provides the coding for the research project "Evaluation of railroad noise: The proximity to railroads and its effect on house prices".
+This repository provides the coding for the research project "The Impact of Germany’s Railroad Noise Protection Act on House Values".
 
-Author: Patrick Thiel
+Author: Dr. Patrick Thiel
 
-Code author: Patrick Thiel
+Code author: Dr. Patrick Thiel
 
 ## Abstract
 
-In 2017, the German federal government passed the Railroad Noise Protection Act to reduce the noise emitted by freight trains. This paper evaluates the effects of this law on house prices by using regional variation comparing affected homes close to train tracks and homes in greater distance before and after the introduction of the national strategy. The difference-in-difference framework suggests an increase in house prices by 0.5% to 2.5% for houses close to the tracks considering different time periods for the act being passed and its complete implementation. A heterogeneity analysis reveals increasing effects with reduced distance to tracks. It also shows that those with the highest general noise burden gain the most from the Railroad Noise Protection Act.
+In 2017, the German federal government enacted the Railroad Noise Protection Act to diminish noise from freight trains. This study assesses the legislature’s impact on residential property values through regional analysis of affected properties proximate to railway tracks and residences at a greater distance before and following the enactment of the national policy. The difference-in-difference analysis indicates that homes located near the tracks experience an increase in house prices ranging from 0.5 to 2.5%, depending on the time periods considered for the passing and implementation of the act. An assessment of heterogeneity demonstrates that the favorable impact of the Railroad Noise Protection Act intensifies as the distance to the tracks shortens. Moreover, individuals with the highest noise exposure, not just from railroads, benefit the most from the policy.
 
 Keywords: House prices, Hedonic price function, Railroad noise, Railroad Noise Protection Act
 
 JEL Codes: O18, Q53
 
-## Current Publication and Citation
+## Publication and Citation
 
-Thiel, P. (2022): Evaluation of railroad noise: The proximity to railroads and its effect on house prices. Ruhr Economic Papers No. 981. DOI: 10.4419/96973146.
+Thiel, P. (2024). The Impact of Germany’s Railroad Noise Protection Act on House Values. Journal of Real Estate Research, 1–30. https://doi.org/10.1080/08965803.2024.2419313.
+
+## Other versions
+
+Thiel, P. (2022): Evaluation of railroad noise: The proximity to railroads and its effect on house prices. Ruhr Economic Papers No. 981. DOI:  https://doi.org/10.4419/96973146.
 
 ## Download latest version here:
 
-https://www.econstor.eu/handle/10419/265605
+https://www.tandfonline.com/doi/full/10.1080/08965803.2024.2419313
